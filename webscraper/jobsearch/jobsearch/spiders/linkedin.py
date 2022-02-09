@@ -3,7 +3,7 @@ import logging
 
 class LinkedinSpider(scrapy.Spider):
     name = 'linkedin'
-    allowed_domains = ['www.linkedin.com/jobs']
+    allowed_domains = ['www.linkedin.com']
     start_urls = ['https://www.linkedin.com/jobs/search/']
 
     def parse(self, response):
@@ -11,7 +11,6 @@ class LinkedinSpider(scrapy.Spider):
 
         for job_link in job_links:
             link = job_link.xpath("./@href").get()
-            print(link)
             yield response.follow(url=link, callback=self.parse_job)
 
         # yield {
@@ -20,13 +19,18 @@ class LinkedinSpider(scrapy.Spider):
 
 
     def parse_job(self, response):
-        company_name = response.xpath("//div/span/a/text()")
-        print(company_name)
-        job_title = response.xpath("//div/span/a/text()")
-        print(job_title)
-        description = response.xpath("//div/div/h1/text()")
+        company_name = response.xpath("//h4/div/span/a/text()").get()
+        job_title = response.xpath("//div/div/h1/text()").get()
+        description = response.xpath("//div/div/section/div/text()").get()
+        related_jobs = response.xpath("//main/section/div/section/div/div/ul")
 
-        yield {
-            'company': company_name,
-            'title': job_title,
-        }
+        for related_job in related_jobs:
+            link = related_job.xpath("./@href").get()
+            print(link)
+            yield response.follow(url=link, callback=self.parse_job)
+
+        # yield {
+        #     'company': company_name,
+        #     'title': job_title,
+        #
+        # }
