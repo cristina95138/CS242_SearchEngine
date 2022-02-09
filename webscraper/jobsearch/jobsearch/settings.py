@@ -54,6 +54,22 @@ ROBOTSTXT_OBEY = False
 #    'jobsearch.middlewares.JobsearchDownloaderMiddleware': 543,
 #}
 
+ROTATING_PROXY_LIST = [
+    '134.209.216.204:3130',
+    '12.218.209.130:53281',
+    '50.24.123.86:8118',
+    '47.88.15.217:80',
+    '45.79.230.234:80',
+    '64.185.0.17:8080'
+]
+
+DOWNLOADER_MIDDLEWARES = {
+    'scrapy.downloadermiddlewares.useragent.UserAgentMiddleware': None,
+    'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
+    'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
+    'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+}
+
 # Enable or disable extensions
 # See https://docs.scrapy.org/en/latest/topics/extensions.html
 #EXTENSIONS = {
