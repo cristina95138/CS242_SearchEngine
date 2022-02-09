@@ -7,19 +7,26 @@ class LinkedinSpider(scrapy.Spider):
     start_urls = ['https://www.linkedin.com/jobs/search/']
 
     def parse(self, response):
-        job_links = response.xpath("//td/a").getall()
+        job_links = response.xpath("//li/div/a")
 
         for job_link in job_links:
-            link = job_link.xpath(".//@href").get()
+            link = job_link.xpath("./@href").get()
+            print(link)
+            yield response.follow(url=link, callback=self.parse_job)
 
-        yield {
-            'job_links': job_links,
-        }
+        # yield {
+        #     'job_links': link,
+        # }
 
-        # yield response.follow(url=link, callback=self.parse_country)
-        #
-        # pass
 
     def parse_job(self, response):
-        company_name = response.request
-        logging.info(response.url)
+        company_name = response.xpath("//div/span/a/text()")
+        print(company_name)
+        job_title = response.xpath("//div/span/a/text()")
+        print(job_title)
+        description = response.xpath("//div/div/h1/text()")
+
+        yield {
+            'company': company_name,
+            'title': job_title,
+        }
