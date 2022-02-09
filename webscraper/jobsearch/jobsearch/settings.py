@@ -21,18 +21,21 @@ LOG_ENABLED = False
 ROBOTSTXT_OBEY = False
 
 # Configure maximum concurrent requests performed by Scrapy (default: 16)
-CONCURRENT_REQUESTS = 32
+CONCURRENT_REQUESTS = 256
 
 # Configure a delay for requests for the same website (default: 0)
 # See https://docs.scrapy.org/en/latest/topics/settings.html#download-delay
 # See also autothrottle settings and docs
-#DOWNLOAD_DELAY = 3
+DOWNLOAD_DELAY = 0
 # The download delay setting will honor only one of:
-#CONCURRENT_REQUESTS_PER_DOMAIN = 16
-#CONCURRENT_REQUESTS_PER_IP = 16
+CONCURRENT_REQUESTS_PER_DOMAIN = 256
+CONCURRENT_REQUESTS_PER_IP = 256
 
 # Disable cookies (enabled by default)
 #COOKIES_ENABLED = False
+DOWNLOAD_TIMEOUT = 30
+RANDOMIZE_DOWNLOAD_DELAY = True
+REACTOR_THREADPOOL_MAXSIZE = 128
 
 # Disable Telnet Console (enabled by default)
 #TELNETCONSOLE_ENABLED = False
@@ -134,6 +137,11 @@ DOWNLOADER_MIDDLEWARES = {
     'scrapy_user_agents.middlewares.RandomUserAgentMiddleware': 400,
     'rotating_proxies.middlewares.RotatingProxyMiddleware': 610,
     'rotating_proxies.middlewares.BanDetectionMiddleware': 620,
+    'scrapy.spidermiddlewares.referer.RefererMiddleware': 80,
+    'scrapy.downloadermiddlewares.retry.RetryMiddleware': 90,
+    'scrapy.downloadermiddlewares.cookies.CookiesMiddleware': 130,
+    'scrapy.downloadermiddlewares.httpcompression.HttpCompressionMiddleware': 810,
+    'scrapy.downloadermiddlewares.redirect.RedirectMiddleware': 900,
 }
 
 # Enable or disable extensions
@@ -150,16 +158,16 @@ DOWNLOADER_MIDDLEWARES = {
 
 # Enable and configure the AutoThrottle extension (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/autothrottle.html
-#AUTOTHROTTLE_ENABLED = True
+AUTOTHROTTLE_ENABLED = True
 # The initial download delay
-#AUTOTHROTTLE_START_DELAY = 5
+AUTOTHROTTLE_START_DELAY = 1
 # The maximum download delay to be set in case of high latencies
-#AUTOTHROTTLE_MAX_DELAY = 60
+AUTOTHROTTLE_MAX_DELAY = 0.25
 # The average number of requests Scrapy should be sending in parallel to
 # each remote server
-#AUTOTHROTTLE_TARGET_CONCURRENCY = 1.0
+AUTOTHROTTLE_TARGET_CONCURRENCY = 128
 # Enable showing throttling stats for every response received:
-#AUTOTHROTTLE_DEBUG = False
+AUTOTHROTTLE_DEBUG = True
 
 # Enable and configure HTTP caching (disabled by default)
 # See https://docs.scrapy.org/en/latest/topics/downloader-middleware.html#httpcache-middleware-settings
@@ -168,3 +176,8 @@ DOWNLOADER_MIDDLEWARES = {
 #HTTPCACHE_DIR = 'httpcache'
 #HTTPCACHE_IGNORE_HTTP_CODES = []
 #HTTPCACHE_STORAGE = 'scrapy.extensions.httpcache.FilesystemCacheStorage'
+
+RETRY_ENABLED = True
+RETRY_TIMES = 3
+RETRY_HTTP_CODES = [500, 502, 503, 504, 400, 401, 403, 404, 405, 406, 407, 408, 409, 410, 429]
+
