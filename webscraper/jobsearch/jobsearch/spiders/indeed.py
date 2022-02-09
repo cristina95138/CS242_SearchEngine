@@ -5,7 +5,7 @@ import time
 
 class IndeedSpider(scrapy.Spider):
     job_titles = ["Medical", "Engineer", "Teacher", "Supervisor", "Manager", "Assistant", "Lawyer", "Developer", "Nurse", "Office", "Worker", "Officer", "Specialist", "Sale", "Representative", "Cashier", "Clerk", "Secretary"]
-    places = ["USA"]
+    places = ["EU"]
     urls = []
     for (job_title, place) in product(job_titles, places):
         urls.append(f"https://www.indeed.com/q-{'-'.join(job_title.split())}-l-{place}-jobs.html")
