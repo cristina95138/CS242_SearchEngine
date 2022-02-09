@@ -10,7 +10,7 @@ class IndeedSpider(scrapy.Spider):
     for (job_title, place) in product(job_titles, places):
         urls.append(f"https://www.indeed.com/q-{'-'.join(job_title.split())}-l-{place}-jobs.html")
 
-    name = "indeed"
+    name = "indeed2"
     allowed_domains = ["www.indeed.com"]
     start_urls = urls
 
