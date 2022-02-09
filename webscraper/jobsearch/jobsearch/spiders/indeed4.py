@@ -4,7 +4,7 @@ import scrapy
 import time
 
 class IndeedSpider(scrapy.Spider):
-    job_titles = [""]
+    job_titles = ["Aid", "Worker", "Retail", "Waiter", "Labor", "Customer", "Service", "Computer", "Science", "Janitor", "Cleaner", "Driver", "Food", "Security", "Construction"]
     places = ["USA"]
     urls = []
     for (job_title, place) in product(job_titles, places):
