@@ -16,26 +16,30 @@ class IndeedSpider(scrapy.Spider):
 
     def parse_jd(self, response, **posting):
         soup = BeautifulSoup(response.text, features="lxml")
+
         jd = soup.find("div", {"id": "jobDescriptionText"}).get_text()
         url = response.url
         posting.update({"job_description": jd, "url": url})
+
         yield posting
 
     def parse(self, response):
         soup = BeautifulSoup(response.text, features="lxml")
-        count = 0
+        # count = 0
 
         listings = soup.find_all("a", {"class": "tapItem"})
+
         for listing in listings:
             title = listing.find("h2", {"class": "jobTitle"}).get_text().strip()
             summary = listing.find("div", {"class": "job-snippet"}).get_text().strip()
             company = listing.find("span", {"class": "companyName"}).get_text().strip()
             location = listing.find("div", {"class": "companyLocation"}).get_text().strip()
 
-            count = count + 1
+            # count = count + 1
 
             posting = {"job_title": title, "summary": summary, "company": company, "location": location}
             page = listing.get("href")
+
             if page is not None:
                 yield response.follow(page, callback=self.parse_jd, cb_kwargs=posting)
 
