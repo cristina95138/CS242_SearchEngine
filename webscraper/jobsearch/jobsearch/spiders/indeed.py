@@ -47,6 +47,7 @@ class IndeedSpider(scrapy.Spider):
         #     time.sleep(2 * 60)
 
         next_page = soup.find("a", {"aria-label": "Next"}).get("href")
+
         if next_page is not None:
             next_page = response.urljoin(next_page)
             yield scrapy.Request(next_page, callback=self.parse)
