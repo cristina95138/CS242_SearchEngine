@@ -4,7 +4,7 @@ import "./Search.css";
 class Search extends Component {
     state = {
         searchValue: "",
-        meals: []
+        data: []
     };
 
     handleOnChange = event => {
@@ -12,17 +12,17 @@ class Search extends Component {
     };
 
     handleSearch = () => {
-        this.makeApiCall(this.state.searchValue);
+        this.makeApiCall();
     };
 
-    makeApiCall = searchInput => {
-        var searchUrl = `https://www.themealdb.com/api/json/v1/1/search.php?s=${searchInput}`;
-        fetch(searchUrl)
+    makeApiCall = () => {
+        fetch("./output.json")
             .then(response => {
                 return response.json();
             })
             .then(jsonData => {
-                this.setState({ meals: jsonData.meals });
+                this.setState({ data: jsonData });
+                alert(this.state.data[0]);
             });
     };
 
@@ -32,18 +32,17 @@ class Search extends Component {
                 <h1>Job Search Engine</h1>
                 <input name="text" type="text" onChange={event => this.handleOnChange(event)} value={this.state.searchValue} placeholder="Search" />
                 <button onClick={this.handleSearch}>Search Lucene</button>
-                <button onClick={this.handleSearch}>Search MapReduce</button>
-                {this.state.meals ? (
+                <button onClick={this.handleSearch}>Search Hadoop MapReduce</button>
+                {this.state.data ? (
                     <div id="results-container">
-                        {this.state.meals.map((meal, index) => (
+                        {this.state.data.map((result, index) => (
                             <div class="single-result" key={index}>
-                                <h2>{meal.strMeal}</h2>
-                                <img src={meal.strMealThumb} alt="meal-thumbnail" />
+                                <h2>{result.job_title}</h2>
                             </div>
                         ))}
                     </div>
                 ) : (
-                    <p>Try searching for a meal</p>
+                    <p>Try searching</p>
                 )}
             </div>
         );
